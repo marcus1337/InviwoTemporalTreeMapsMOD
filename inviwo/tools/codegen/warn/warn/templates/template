@@ -1,0 +1,11 @@
+#if !defined({prefix}WARN_INCLUDE_PUSH)
+#   error "`{folder}/{ignore}/{name}` used without `{folder}/push`"
+#endif
+
+#if defined({prefix}{guard})
+#   error "`{folder}/{ignore}/{name}` already included"
+#endif
+
+#define {prefix}{guard}
+
+{contents}

@@ -1,0 +1,259 @@
+#--------------------------------------------------------------------
+# Inviwo Base Module
+ivw_module(Base)
+
+#--------------------------------------------------------------------
+# Add header files
+set(HEADER_FILES
+    include/modules/base/algorithm/algorithmoptions.h
+    include/modules/base/algorithm/cohensutherland.h
+    include/modules/base/algorithm/convexhull.h
+    include/modules/base/algorithm/convexhullmesh.h
+    include/modules/base/algorithm/cubeproxygeometry.h
+    include/modules/base/algorithm/dataminmax.h
+    include/modules/base/algorithm/image/imagecontour.h
+    include/modules/base/algorithm/image/layerramdistancetransform.h
+    include/modules/base/algorithm/image/layerramsubset.h
+    include/modules/base/algorithm/mesh/axisalignedboundingbox.h
+    include/modules/base/algorithm/mesh/meshcameraalgorithms.h
+    include/modules/base/algorithm/mesh/meshclipping.h
+    include/modules/base/algorithm/mesh/meshconverter.h
+    include/modules/base/algorithm/meshutils.h
+    include/modules/base/algorithm/randomutils.h
+    include/modules/base/algorithm/volume/marchingcubes.h
+    include/modules/base/algorithm/volume/marchingcubesopt.h
+    include/modules/base/algorithm/volume/marchingtetrahedron.h
+    include/modules/base/algorithm/volume/surfaceextraction.h
+    include/modules/base/algorithm/volume/volumecurl.h
+    include/modules/base/algorithm/volume/volumedivergence.h
+    include/modules/base/algorithm/volume/volumegeneration.h
+    include/modules/base/algorithm/volume/volumegradient.h
+    include/modules/base/algorithm/volume/volumelaplacian.h
+    include/modules/base/algorithm/volume/volumeramdistancetransform.h
+    include/modules/base/algorithm/volume/volumeramsubsample.h
+    include/modules/base/algorithm/volume/volumeramsubset.h
+    include/modules/base/algorithm/volume/volumesignificantvoxels.h
+    include/modules/base/basemodule.h
+    include/modules/base/basemoduledefine.h
+    include/modules/base/datastructures/disjointsets.h
+    include/modules/base/datastructures/imagereusecache.h
+    include/modules/base/datastructures/kdtree.h
+    include/modules/base/io/binarystlwriter.h
+    include/modules/base/io/datvolumesequencereader.h
+    include/modules/base/io/datvolumewriter.h
+    include/modules/base/io/ivfsequencevolumereader.h
+    include/modules/base/io/ivfsequencevolumewriter.h
+    include/modules/base/io/ivfvolumereader.h
+    include/modules/base/io/ivfvolumewriter.h
+    include/modules/base/io/stlwriter.h
+    include/modules/base/io/wavefrontwriter.h
+    include/modules/base/processors/buffertomeshprocessor.h
+    include/modules/base/processors/camerafrustum.h
+    include/modules/base/processors/convexhull2dprocessor.h
+    include/modules/base/processors/cubeproxygeometryprocessor.h
+    include/modules/base/processors/dataexport.h
+    include/modules/base/processors/datasource.h
+    include/modules/base/processors/diffuselightsourceprocessor.h
+    include/modules/base/processors/directionallightsourceprocessor.h
+    include/modules/base/processors/distancetransformram.h
+    include/modules/base/processors/heightfieldmapper.h
+    include/modules/base/processors/imagecontourprocessor.h
+    include/modules/base/processors/imageexport.h
+    include/modules/base/processors/imageinformation.h
+    include/modules/base/processors/imagesequenceelementselectorprocessor.h
+    include/modules/base/processors/imagesnapshot.h
+    include/modules/base/processors/imagesource.h
+    include/modules/base/processors/imagesourceseries.h
+    include/modules/base/processors/imagestackvolumesource.h
+    include/modules/base/processors/imagetospatialsampler.h
+    include/modules/base/processors/inputselector.h
+    include/modules/base/processors/layerdistancetransformram.h
+    include/modules/base/processors/meshclipping.h
+    include/modules/base/processors/meshconverterprocessor.h
+    include/modules/base/processors/meshcreator.h
+    include/modules/base/processors/meshexport.h
+    include/modules/base/processors/meshinformation.h
+    include/modules/base/processors/meshmapping.h
+    include/modules/base/processors/meshplaneclipping.h
+    include/modules/base/processors/meshsequenceelementselectorprocessor.h
+    include/modules/base/processors/meshsource.h
+    include/modules/base/processors/noiseprocessor.h
+    include/modules/base/processors/noisevolumeprocessor.h
+    include/modules/base/processors/ordinalpropertyanimator.h
+    include/modules/base/processors/orientationindicator.h
+    include/modules/base/processors/pixeltobufferprocessor.h
+    include/modules/base/processors/pixelvalue.h
+    include/modules/base/processors/pointlightsourceprocessor.h
+    include/modules/base/processors/randommeshgenerator.h
+    include/modules/base/processors/randomspheregenerator.h
+    include/modules/base/processors/singlevoxel.h
+    include/modules/base/processors/spotlightsourceprocessor.h
+    include/modules/base/processors/stereocamerasyncer.h
+    include/modules/base/processors/surfaceextractionprocessor.h
+    include/modules/base/processors/tfselector.h
+    include/modules/base/processors/transform.h
+    include/modules/base/processors/trianglestowireframe.h
+    include/modules/base/processors/vectorelementselectorprocessor.h
+    include/modules/base/processors/volumebasistransformer.h
+    include/modules/base/processors/volumeboundaryplanes.h
+    include/modules/base/processors/volumeboundingbox.h
+    include/modules/base/processors/volumecreator.h
+    include/modules/base/processors/volumecurlcpuprocessor.h
+    include/modules/base/processors/volumedivergencecpuprocessor.h
+    include/modules/base/processors/volumeexport.h
+    include/modules/base/processors/volumegradientcpuprocessor.h
+    include/modules/base/processors/volumeinformation.h
+    include/modules/base/processors/volumelaplacianprocessor.h
+    include/modules/base/processors/volumesequenceelementselectorprocessor.h
+    include/modules/base/processors/volumesequencesingletimestepsampler.h
+    include/modules/base/processors/volumesequencesource.h
+    include/modules/base/processors/volumesequencetospatial4dsampler.h
+    include/modules/base/processors/volumeslice.h
+    include/modules/base/processors/volumesource.h
+    include/modules/base/processors/volumesubsample.h
+    include/modules/base/processors/volumesubset.h
+    include/modules/base/processors/volumetospatialsampler.h
+    include/modules/base/processors/worldtransformdeprecated.h
+    include/modules/base/properties/basisproperty.h
+    include/modules/base/properties/bufferinformationproperty.h
+    include/modules/base/properties/gaussianproperty.h
+    include/modules/base/properties/imageinformationproperty.h
+    include/modules/base/properties/layerinformationproperty.h
+    include/modules/base/properties/meshinformationproperty.h
+    include/modules/base/properties/sequencetimerproperty.h
+    include/modules/base/properties/volumeinformationproperty.h
+)
+ivw_group("Header Files" ${HEADER_FILES})
+
+
+#--------------------------------------------------------------------
+# Add source files
+set(SOURCE_FILES
+    src/algorithm/algorithmoptions.cpp
+    src/algorithm/cohensutherland.cpp
+    src/algorithm/convexhullmesh.cpp
+    src/algorithm/cubeproxygeometry.cpp
+    src/algorithm/dataminmax.cpp
+    src/algorithm/image/imagecontour.cpp
+    src/algorithm/image/layerramdistancetransform.cpp
+    src/algorithm/image/layerramsubset.cpp
+    src/algorithm/mesh/axisalignedboundingbox.cpp
+    src/algorithm/mesh/meshcameraalgorithms.cpp
+    src/algorithm/mesh/meshclipping.cpp
+    src/algorithm/mesh/meshconverter.cpp
+    src/algorithm/meshutils.cpp
+    src/algorithm/volume/marchingcubes.cpp
+    src/algorithm/volume/marchingcubesopt.cpp
+    src/algorithm/volume/marchingtetrahedron.cpp
+    src/algorithm/volume/surfaceextraction.cpp
+    src/algorithm/volume/volumecurl.cpp
+    src/algorithm/volume/volumedivergence.cpp
+    src/algorithm/volume/volumegeneration.cpp
+    src/algorithm/volume/volumegradient.cpp
+    src/algorithm/volume/volumelaplacian.cpp
+    src/algorithm/volume/volumeramdistancetransform.cpp
+    src/algorithm/volume/volumeramsubsample.cpp
+    src/algorithm/volume/volumeramsubset.cpp
+    src/algorithm/volume/volumesignificantvoxels.cpp
+    src/basemodule.cpp
+    src/datastructures/disjointsets.cpp
+    src/datastructures/imagereusecache.cpp
+    src/io/binarystlwriter.cpp
+    src/io/datvolumesequencereader.cpp
+    src/io/datvolumewriter.cpp
+    src/io/ivfsequencevolumereader.cpp
+    src/io/ivfsequencevolumewriter.cpp
+    src/io/ivfvolumereader.cpp
+    src/io/ivfvolumewriter.cpp
+    src/io/stlwriter.cpp
+    src/io/wavefrontwriter.cpp
+    src/processors/buffertomeshprocessor.cpp
+    src/processors/camerafrustum.cpp
+    src/processors/convexhull2dprocessor.cpp
+    src/processors/cubeproxygeometryprocessor.cpp
+    src/processors/diffuselightsourceprocessor.cpp
+    src/processors/directionallightsourceprocessor.cpp
+    src/processors/distancetransformram.cpp
+    src/processors/heightfieldmapper.cpp
+    src/processors/imagecontourprocessor.cpp
+    src/processors/imageexport.cpp
+    src/processors/imageinformation.cpp
+    src/processors/imagesequenceelementselectorprocessor.cpp
+    src/processors/imagesnapshot.cpp
+    src/processors/imagesource.cpp
+    src/processors/imagesourceseries.cpp
+    src/processors/imagestackvolumesource.cpp
+    src/processors/imagetospatialsampler.cpp
+    src/processors/inputselector.cpp
+    src/processors/layerdistancetransformram.cpp
+    src/processors/meshclipping.cpp
+    src/processors/meshconverterprocessor.cpp
+    src/processors/meshcreator.cpp
+    src/processors/meshexport.cpp
+    src/processors/meshinformation.cpp
+    src/processors/meshmapping.cpp
+    src/processors/meshplaneclipping.cpp
+    src/processors/meshsequenceelementselectorprocessor.cpp
+    src/processors/meshsource.cpp
+    src/processors/noiseprocessor.cpp
+    src/processors/noisevolumeprocessor.cpp
+    src/processors/ordinalpropertyanimator.cpp
+    src/processors/orientationindicator.cpp
+    src/processors/pixeltobufferprocessor.cpp
+    src/processors/pixelvalue.cpp
+    src/processors/pointlightsourceprocessor.cpp
+    src/processors/randommeshgenerator.cpp
+    src/processors/randomspheregenerator.cpp
+    src/processors/singlevoxel.cpp
+    src/processors/spotlightsourceprocessor.cpp
+    src/processors/stereocamerasyncer.cpp
+    src/processors/surfaceextractionprocessor.cpp
+    src/processors/tfselector.cpp
+    src/processors/transform.cpp
+    src/processors/trianglestowireframe.cpp
+    src/processors/volumeboundaryplanes.cpp
+    src/processors/volumeboundingbox.cpp
+    src/processors/volumecreator.cpp
+    src/processors/volumecurlcpuprocessor.cpp
+    src/processors/volumedivergencecpuprocessor.cpp
+    src/processors/volumeexport.cpp
+    src/processors/volumegradientcpuprocessor.cpp
+    src/processors/volumeinformation.cpp
+    src/processors/volumelaplacianprocessor.cpp
+    src/processors/volumesequenceelementselectorprocessor.cpp
+    src/processors/volumesequencesingletimestepsampler.cpp
+    src/processors/volumesequencesource.cpp
+    src/processors/volumesequencetospatial4dsampler.cpp
+    src/processors/volumeslice.cpp
+    src/processors/volumesource.cpp
+    src/processors/volumesubsample.cpp
+    src/processors/volumesubset.cpp
+    src/processors/volumetospatialsampler.cpp
+    src/properties/basisproperty.cpp
+    src/properties/bufferinformationproperty.cpp
+    src/properties/gaussianproperty.cpp
+    src/properties/imageinformationproperty.cpp
+    src/properties/layerinformationproperty.cpp
+    src/properties/meshinformationproperty.cpp
+    src/properties/sequencetimerproperty.cpp
+    src/properties/volumeinformationproperty.cpp
+)
+ivw_group("Source Files" ${SOURCE_FILES})
+
+#--------------------------------------------------------------------
+# Unit tests
+set(TEST_FILES
+    tests/unittests/base-unittest-main.cpp
+    tests/unittests/convexhull-test.cpp
+    tests/unittests/kdtree-test.cpp
+    tests/unittests/marchingcubes-test.cpp
+    tests/unittests/meshcutting-test.cpp
+)
+ivw_add_unittest(${TEST_FILES})
+
+#--------------------------------------------------------------------
+# Create module
+ivw_create_module(${SOURCE_FILES} ${MOC_FILES} ${HEADER_FILES})
+if(IVW_BENCHMARKS)
+    add_subdirectory(tests/benchmarks)
+endif()

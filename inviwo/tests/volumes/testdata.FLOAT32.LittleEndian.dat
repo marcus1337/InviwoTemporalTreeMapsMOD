@@ -1,0 +1,4 @@
+RawFile: testdata.FLOAT32.LittleEndian.raw
+Resolution: 13 7 3
+Format: FLOAT32
+ByteOrder:  LittleEndian

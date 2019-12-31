@@ -1,0 +1,13 @@
+if(IVW_TINY_GLFW_APPLICATION)
+    add_subdirectory(minimals/glfw)
+endif()
+if(IVW_TINY_QT_APPLICATION)
+    add_subdirectory(minimals/qt)
+endif()
+if(IVW_QT_APPLICATION)
+	add_subdirectory(inviwo)
+endif()
+
+if(IVW_MODULE_PYTHON3)
+	add_subdirectory(inviwopyapp)
+endif()

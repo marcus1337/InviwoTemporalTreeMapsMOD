@@ -1,0 +1,231 @@
+#--------------------------------------------------------------------
+# Inviwo Base OpenGL Module
+ivw_module(BaseGL)
+
+#--------------------------------------------------------------------
+# Add header files
+set(HEADER_FILES
+    include/modules/basegl/algorithm/entryexitpoints.h
+    include/modules/basegl/algorithm/imageconvolution.h
+    include/modules/basegl/baseglmodule.h
+    include/modules/basegl/baseglmoduledefine.h
+    include/modules/basegl/datastructures/meshshadercache.h
+    include/modules/basegl/datavisualizer/imagebackgroundvisualizer.h
+    include/modules/basegl/datavisualizer/imagevisualizer.h
+    include/modules/basegl/datavisualizer/meshvisualizer.h
+    include/modules/basegl/datavisualizer/volumeraycastvisualizer.h
+    include/modules/basegl/datavisualizer/volumeslicevisualizer.h
+    include/modules/basegl/processors/axisalignedcutplane.h
+    include/modules/basegl/processors/background.h
+    include/modules/basegl/processors/cuberenderer.h
+    include/modules/basegl/processors/drawlines.h
+    include/modules/basegl/processors/drawpoints.h
+    include/modules/basegl/processors/embeddedvolumeslice.h
+    include/modules/basegl/processors/entryexitpointsprocessor.h
+    include/modules/basegl/processors/firstivwprocessor.h
+    include/modules/basegl/processors/geometryentryexitpoints.h
+    include/modules/basegl/processors/heightfieldprocessor.h
+    include/modules/basegl/processors/imageprocessing/findedges.h
+    include/modules/basegl/processors/imageprocessing/imagebinary.h
+    include/modules/basegl/processors/imageprocessing/imagechannelcombine.h
+    include/modules/basegl/processors/imageprocessing/imagechannelselect.h
+    include/modules/basegl/processors/imageprocessing/imagecompositeprocessorgl.h
+    include/modules/basegl/processors/imageprocessing/imagegamma.h
+    include/modules/basegl/processors/imageprocessing/imageglprocessor.h
+    include/modules/basegl/processors/imageprocessing/imagegradient.h
+    include/modules/basegl/processors/imageprocessing/imagegrayscale.h
+    include/modules/basegl/processors/imageprocessing/imagehighpass.h
+    include/modules/basegl/processors/imageprocessing/imageinvert.h
+    include/modules/basegl/processors/imageprocessing/imagelayer.h
+    include/modules/basegl/processors/imageprocessing/imagelayoutgl.h
+    include/modules/basegl/processors/imageprocessing/imagelowpass.h
+    include/modules/basegl/processors/imageprocessing/imagemapping.h
+    include/modules/basegl/processors/imageprocessing/imagemixer.h
+    include/modules/basegl/processors/imageprocessing/imagenormalizationprocessor.h
+    include/modules/basegl/processors/imageprocessing/imageoverlaygl.h
+    include/modules/basegl/processors/imageprocessing/imageresample.h
+    include/modules/basegl/processors/imageprocessing/imagescaling.h
+    include/modules/basegl/processors/imageprocessing/imagesubsetgl.h
+    include/modules/basegl/processors/imageprocessing/jacobian2d.h
+    include/modules/basegl/processors/isoraycaster.h
+    include/modules/basegl/processors/lightingraycaster.h
+    include/modules/basegl/processors/lightvolumegl.h
+    include/modules/basegl/processors/linerenderer.h
+    include/modules/basegl/processors/mesh2drenderprocessorgl.h
+    include/modules/basegl/processors/meshpicking.h
+    include/modules/basegl/processors/meshrenderprocessorgl.h
+    include/modules/basegl/processors/multichannelraycaster.h
+    include/modules/basegl/processors/pointrenderer.h
+    include/modules/basegl/processors/redgreenprocessor.h
+    include/modules/basegl/processors/sphererenderer.h
+    include/modules/basegl/processors/splitimage.h
+    include/modules/basegl/processors/tuberendering.h
+    include/modules/basegl/processors/volumeprocessing/vectormagnitudeprocessor.h
+    include/modules/basegl/processors/volumeprocessing/volumebinary.h
+    include/modules/basegl/processors/volumeprocessing/volumecombiner.h
+    include/modules/basegl/processors/volumeprocessing/volumediff.h
+    include/modules/basegl/processors/volumeprocessing/volumeglprocessor.h
+    include/modules/basegl/processors/volumeprocessing/volumegradientmagnitude.h
+    include/modules/basegl/processors/volumeprocessing/volumegradientprocessor.h
+    include/modules/basegl/processors/volumeprocessing/volumelowpass.h
+    include/modules/basegl/processors/volumeprocessing/volumemapping.h
+    include/modules/basegl/processors/volumeprocessing/volumemerger.h
+    include/modules/basegl/processors/volumeprocessing/volumeshader.h
+    include/modules/basegl/processors/volumeraycaster.h
+    include/modules/basegl/processors/volumeslicegl.h
+    include/modules/basegl/viewmanager.h
+)
+ivw_group("Header Files" ${HEADER_FILES})
+
+#--------------------------------------------------------------------
+# Add source files
+set(SOURCE_FILES
+    src/algorithm/entryexitpoints.cpp
+    src/algorithm/imageconvolution.cpp
+    src/baseglmodule.cpp
+    src/datastructures/meshshadercache.cpp
+    src/datavisualizer/imagebackgroundvisualizer.cpp
+    src/datavisualizer/imagevisualizer.cpp
+    src/datavisualizer/meshvisualizer.cpp
+    src/datavisualizer/volumeraycastvisualizer.cpp
+    src/datavisualizer/volumeslicevisualizer.cpp
+    src/processors/axisalignedcutplane.cpp
+    src/processors/background.cpp
+    src/processors/cuberenderer.cpp
+    src/processors/drawlines.cpp
+    src/processors/drawpoints.cpp
+    src/processors/embeddedvolumeslice.cpp
+    src/processors/entryexitpointsprocessor.cpp
+    src/processors/firstivwprocessor.cpp
+    src/processors/geometryentryexitpoints.cpp
+    src/processors/heightfieldprocessor.cpp
+    src/processors/imageprocessing/findedges.cpp
+    src/processors/imageprocessing/imagebinary.cpp
+    src/processors/imageprocessing/imagechannelcombine.cpp
+    src/processors/imageprocessing/imagechannelselect.cpp
+    src/processors/imageprocessing/imagecompositeprocessorgl.cpp
+    src/processors/imageprocessing/imagegamma.cpp
+    src/processors/imageprocessing/imageglprocessor.cpp
+    src/processors/imageprocessing/imagegradient.cpp
+    src/processors/imageprocessing/imagegrayscale.cpp
+    src/processors/imageprocessing/imagehighpass.cpp
+    src/processors/imageprocessing/imageinvert.cpp
+    src/processors/imageprocessing/imagelayer.cpp
+    src/processors/imageprocessing/imagelayoutgl.cpp
+    src/processors/imageprocessing/imagelowpass.cpp
+    src/processors/imageprocessing/imagemapping.cpp
+    src/processors/imageprocessing/imagemixer.cpp
+    src/processors/imageprocessing/imagenormalizationprocessor.cpp
+    src/processors/imageprocessing/imageoverlaygl.cpp
+    src/processors/imageprocessing/imageresample.cpp
+    src/processors/imageprocessing/imagescaling.cpp
+    src/processors/imageprocessing/imagesubsetgl.cpp
+    src/processors/imageprocessing/jacobian2d.cpp
+    src/processors/isoraycaster.cpp
+    src/processors/lightingraycaster.cpp
+    src/processors/lightvolumegl.cpp
+    src/processors/linerenderer.cpp
+    src/processors/mesh2drenderprocessorgl.cpp
+    src/processors/meshpicking.cpp
+    src/processors/meshrenderprocessorgl.cpp
+    src/processors/multichannelraycaster.cpp
+    src/processors/pointrenderer.cpp
+    src/processors/redgreenprocessor.cpp
+    src/processors/sphererenderer.cpp
+    src/processors/splitimage.cpp
+    src/processors/tuberendering.cpp
+    src/processors/volumeprocessing/vectormagnitudeprocessor.cpp
+    src/processors/volumeprocessing/volumebinary.cpp
+    src/processors/volumeprocessing/volumecombiner.cpp
+    src/processors/volumeprocessing/volumediff.cpp
+    src/processors/volumeprocessing/volumeglprocessor.cpp
+    src/processors/volumeprocessing/volumegradientmagnitude.cpp
+    src/processors/volumeprocessing/volumegradientprocessor.cpp
+    src/processors/volumeprocessing/volumelowpass.cpp
+    src/processors/volumeprocessing/volumemapping.cpp
+    src/processors/volumeprocessing/volumemerger.cpp
+    src/processors/volumeprocessing/volumeshader.cpp
+    src/processors/volumeraycaster.cpp
+    src/processors/volumeslicegl.cpp
+    src/viewmanager.cpp
+)
+ivw_group("Source Files" ${SOURCE_FILES})
+
+#--------------------------------------------------------------------
+# Add shaders
+set(SHADER_FILES
+    glsl/embeddedvolumeslice.frag
+    glsl/embeddedvolumeslice.vert
+    glsl/axisalignedcutplaneboundingbox.frag
+    glsl/axisalignedcutplaneslice.frag
+    glsl/background.frag
+    glsl/capnearclipping.frag
+    glsl/cubeglyph.frag
+    glsl/cubeglyph.geom
+    glsl/cubeglyph.vert
+    glsl/heightfield.frag
+    glsl/heightfield.vert
+    glsl/imagegradient.frag
+    glsl/img_binary.frag
+    glsl/img_channel_combine.frag
+    glsl/img_channel_select.frag
+    glsl/img_convolution.frag
+    glsl/img_findedges.frag
+    glsl/img_gamma.frag
+    glsl/img_graysc.frag
+    glsl/img_highpass.frag
+    glsl/img_invert.frag
+    glsl/img_jacobian.frag
+    glsl/img_mapping.frag
+    glsl/img_mix.frag
+    glsl/img_normalize.frag
+    glsl/img_overlay.frag
+    glsl/img_resample.frag
+    glsl/lighting/lightingraycasting.frag
+    glsl/lighting/lightpropagation.frag
+    glsl/lighting/lightpropagation.geom
+    glsl/lighting/lightpropagation.vert
+    glsl/lighting/lightvolumeblend.frag
+    glsl/lighting/lightvolumeblend.geom
+    glsl/lighting/lightvolumeblend.vert
+    glsl/linerenderer.frag
+    glsl/linerenderer.geom
+    glsl/linerenderer.vert
+    glsl/mesh2drendering.frag
+    glsl/mesh2drendering.vert
+    glsl/meshentryexit.vert
+    glsl/meshrendering.frag
+    glsl/meshrendering.vert
+    glsl/multichannelraycaster.frag
+    glsl/pointrenderer.frag
+    glsl/pointrenderer.vert
+    glsl/sphereglyph.frag
+    glsl/sphereglyph.geom
+    glsl/sphereglyph.vert
+    glsl/splitter.vert
+    glsl/tuberendering.frag
+    glsl/tuberendering.geom
+    glsl/tuberendering.vert
+    glsl/vectormagnitudeprocessor.frag
+    glsl/volume_binary.frag
+    glsl/volume_difference.frag
+    glsl/volume_gpu.geom
+    glsl/volume_gpu.vert
+    glsl/volume_gradient.frag
+    glsl/volume_laplacian.frag
+    glsl/volume_lowpass.frag
+    glsl/volume_mapping.frag
+    glsl/volumegradientmagnitude.frag
+    glsl/volumemerger.frag
+    glsl/volumeslice.frag
+)
+ivw_group("Shader Files" ${SHADER_FILES})
+
+#--------------------------------------------------------------------
+# Create module
+ivw_create_module(${SOURCE_FILES} ${HEADER_FILES} ${SHADER_FILES})
+
+#--------------------------------------------------------------------
+# Package or build shaders into resources
+ivw_handle_shader_resources(${CMAKE_CURRENT_SOURCE_DIR}/glsl ${SHADER_FILES})
+

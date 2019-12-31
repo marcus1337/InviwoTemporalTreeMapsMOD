@@ -1,0 +1,6 @@
+inviwo-log.html
+**/.DS_Store
+*.pyc
+pyconfig.ini
+.idea
+.vscode
