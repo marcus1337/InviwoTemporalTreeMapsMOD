@@ -103,6 +103,37 @@ public:
             return x < right.x;
         }
 
+        void mult(float multiplier) {
+            x *= multiplier;
+            y *= multiplier;
+        }
+
+        Point& operator+= (const Point& first) {
+            x += first.x;
+            y += first.y;
+            return *this;
+        }
+        Point operator+(const Point& that) const
+        {
+            Point result(this->x, this->y);
+            result.x += that.x;
+            result.y += that.y;
+            return result;
+        }
+
+        Point& operator-= (const Point& first) {
+            x -= first.x;
+            y -= first.y;
+            return *this;
+        }
+        Point operator-(const Point& that) const
+        {
+            Point result(this->x, this->y);
+            result.x -= that.x;
+            result.y -= that.y;
+            return result;
+        }
+
         bool Point::operator==(const Point& A) const { return cmpf(A.x, x) && cmpf(A.y, y); }
 
         static bool cmpf(float A, float B, float epsilon = 0.005f)
@@ -182,6 +213,9 @@ public:
     void extractCorners(std::vector<TemporalTreeMeshGenerator::Point>& vertArr);
     void addControlPoints(std::vector<TemporalTreeMeshGenerator::Point>& vertArr);
     void storeBeziersInFile(std::vector<std::vector<Point>>& beziers, std::string fileNameTxt = "bezierinfo.txt");
+
+    void storeOriginalTrianglesInFile(std::vector<BasicMesh::Vertex>& vertices, std::shared_ptr<BasicMesh> meshBands, std::string fileNameTxt = "originalVerts.txt");
+    //void scaleTriangles(std::vector<BasicMesh::Vertex>& vertices, std::shared_ptr<BasicMesh> meshBands, float scale);
 
     static constexpr float curvyness = 0.5f;
 

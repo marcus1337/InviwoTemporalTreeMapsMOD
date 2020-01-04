@@ -151,15 +151,8 @@ void TemporalTreeLayoutRenderer::process()
         utilgl::activateAndClearTarget(portOutImage, ImageType::ColorDepth);
     }
     auto imageDimensions = portInImage.getData()->getDimensions();
-  //  portInImage.getData()->get
-    /*std::fstream fs;
-    fs.open("testABC000.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    fs << "TEST: "
-        << "X: " << test.r << " | Y: " << test.g << " | " << " | " << test.x << "\n";
-    fs.close();*/
 
     mat4 proj = glm::ortho(0.0f - left.get(), 1.0f + right.get(), 0.0f - bottom.get(), 1.0f + top.get(), -200.0f, 100.0f);
-
     {
         if (propInterpretAsCoefficients.get())
         {
@@ -183,21 +176,9 @@ void TemporalTreeLayoutRenderer::process()
         bandShader.setUniform("diffuseLightColor", propDiffuseLight);
         glm::float1 xpixels = imageDimensions.r;
         glm::float1 ypixels = imageDimensions.g;
-
-        glm::float1 x_width = 941;
-        glm::float1 y_height = 646;
-
-        bandShader.setUniform("x_width", x_width);
-        bandShader.setUniform("y_height", y_height);
        
         bandShader.setUniform("x_pixels", xpixels);
         bandShader.setUniform("y_pixels", ypixels);
-
-       /* glm::bool1 isTest = true;
-        glm::vec2 testVert(0.1, 0.1);
-        bandShader.setUniform("testVert", testVert);
-        bandShader.setUniform("isTest", isTest);*/
-
 
         utilgl::GlBoolState depthTest(GL_DEPTH_TEST, false);
         glEnable(GL_PROGRAM_POINT_SIZE);

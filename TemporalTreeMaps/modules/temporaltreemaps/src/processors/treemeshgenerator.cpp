@@ -131,6 +131,42 @@ void TemporalTreeMeshGenerator::createBeziers(std::vector<BasicMesh::Vertex>& ve
     storeBeziersInFile(mergeSplitCorners, "beziersplitinfo.txt");
 }
 
+void TemporalTreeMeshGenerator::storeOriginalTrianglesInFile(std::vector<BasicMesh::Vertex>& vertices, std::shared_ptr<BasicMesh> meshBands, std::string fileNameTxt) {
+    std::vector<std::vector<Point>> triangles;
+    auto LeftComp = [](const Point& a, const Point& b)
+    {
+        return a.x < b.x;
+    };
+    auto& bands = meshBands->getIndexBuffers();
+    for (auto& band : bands) {
+        int bandSize = band.second->getSize();
+        if (bandSize != 6)
+            continue;
+
+        auto& buff = *band.second->getEditableRAMRepresentation();
+
+        std::vector<Point> triangle;
+        for (int i = 0; i < 3; i++) {
+            int indexBuff = buff.get(i);
+            Point t = Point(vertices[indexBuff]._Myfirst._Val);
+            triangle.push_back(t);
+        }
+        std::sort(triangle.begin(), triangle.end(), LeftComp);
+        triangles.push_back(triangle);
+
+        triangle.clear();
+        for (int i = 3; i < 6; i++) {
+            int indexBuff = buff.get(i);
+            Point t = Point(vertices[indexBuff]._Myfirst._Val);
+            triangle.push_back(t);
+        }
+        std::sort(triangle.begin(), triangle.end(), LeftComp);
+        triangles.push_back(triangle);
+    }
+
+    storeBeziersInFile(triangles, fileNameTxt);
+}
+
 std::vector<std::vector<Point>> TemporalTreeMeshGenerator::makeMergeSplitCornersAndAddToLines(std::vector<BasicMesh::Vertex>& vertices, 
     std::shared_ptr<BasicMesh> meshBands, std::vector<std::set<Point>>& linesInSets) {
     int oldMeshBandSize = meshBands->getIndexBuffers().size();
@@ -436,19 +472,20 @@ void TemporalTreeMeshGenerator::process()
     mergedVerticeIndexes.clear();
     
     makeMesh(*pTree, meshBands, verticesBands, meshLines, verticesLines);
-    
+
     meshBands->addVertices(verticesBands);
     meshLines->addVertices(verticesLines);
 
     turnTrianglestripToTriangles(nonMergeVerticeIndexes);
-
     sliceTrianglesToTwosets(nonMergeVerticeIndexes, meshBands);
-
     createBeziers(verticesBands, meshBands);
 
     portOutMeshBands.setData(meshBands);
     portOutMeshLines.setData(meshLines);
+
+    storeOriginalTrianglesInFile(verticesBands, meshBands);
 }
+
 
 void TemporalTreeMeshGenerator::turnTrianglestripToTriangles(std::vector<std::shared_ptr<inviwo::IndexBufferRAM>>& verticeIndexes) {
     for (auto arr : verticeIndexes) {

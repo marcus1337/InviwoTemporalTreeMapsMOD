@@ -62,6 +62,32 @@ void MeshDrawerGL::drawTextInfo(std::string str) {
         fs.close();
 }
 
+std::vector<std::vector<std::tuple<float, float>>> MeshDrawerGL::loadAllTriangles(
+    std::string fileNameTxt) {
+    std::vector<std::vector<std::tuple<float, float>>> result;
+    std::string fullFilePath = "D:/School/TemporalTreeMaps/modules/temporaltreemaps/glsl/" + fileNameTxt;
+    std::ifstream file(fullFilePath);
+
+    float x;
+    while (file >> x) {
+        std::vector<std::tuple<float, float>> res;
+        float y;
+        file >> y;
+        std::tuple<float, float> P = std::make_tuple(x, y);
+        res.push_back(P);
+        file >> x >> y;
+        P = std::make_tuple(x, y);
+        res.push_back(P);
+
+        file >> x >> y;
+        P = std::make_tuple(x, y);
+        res.push_back(P);
+        result.push_back(res);
+    }
+
+    return result;
+}
+
 void MeshDrawerGL::loadBeziers(std::vector<std::vector<std::tuple<float, float>>>& bezierss, std::string fileNameTxt) {
     bezierss.clear();
     std::string fullFilePath = "D:/School/TemporalTreeMaps/modules/temporaltreemaps/glsl/"+ fileNameTxt;
@@ -80,18 +106,6 @@ void MeshDrawerGL::loadBeziers(std::vector<std::vector<std::tuple<float, float>>
         }
         bezierss.push_back(res);
     }
-
-    /*std::string test;
-    for (auto arr : bezierss) {
-        for (auto v : arr) {
-            float x = std::get<0>(v);
-            float y = std::get<1>(v);
-            test += "(" + std::to_string(x) + "," + std::to_string(y)+") ";
-        }
-        test += "\n";
-    }
-    drawTextInfo(test);*/
-
 }
 
 void MeshDrawerGL::draw() {
@@ -104,11 +118,11 @@ void MeshDrawerGL::draw() {
 
     std::vector<std::vector<std::tuple<float, float>>> beziers;
     std::vector<std::vector<std::tuple<float, float>>> beziersSplits;
+    auto triangles = loadAllTriangles();
 
     if (drawInfo == 999) {
         loadBeziers(beziers);
         loadBeziers(beziersSplits, "beziersplitinfo.txt");
-      //  utilgl::setShaderUniforms(*((Shader*)bandShader), *(getMesh()), "geometry_");
     }
 
     auto meshGL = meshToDraw_->getRepresentation<MeshGL>();
@@ -119,15 +133,13 @@ void MeshDrawerGL::draw() {
 
     int normalBezierCounter = 0;
     int splitBezierCounter = 0;
+    int triangleCounter = 0;
 
     std::size_t numIndexBuffers = meshGL->getIndexBufferCount();
     if (numIndexBuffers > 0) {
         // draw mesh using the index buffers
         for (std::size_t i = 0; i < numIndexBuffers; ++i) {
-            auto indexBuffer = meshGL->getIndexBuffer(i);
-
-           // auto test = *indexBuffer->getBufferObject();
-            
+            auto indexBuffer = meshGL->getIndexBuffer(i);            
 
             auto numIndices = indexBuffer->getSize();
             if (numIndices > 0) {
@@ -137,15 +149,13 @@ void MeshDrawerGL::draw() {
 
                 auto numInds = static_cast<GLsizei>(numIndices);
                  
-           
                //  glDrawElements(drawMode, static_cast<GLsizei>(numIndices),
                //                indexBuffer->getFormatType(), nullptr);
 
-                //glPatchParameteri(GL_PATCH_VERTICES, 3);
+                glPatchParameteri(GL_PATCH_VERTICES, 3);
                 if (drawInfo == 999 && numIndices == 6 &&
                     (drawMode == GL_TRIANGLE_STRIP || drawMode == GL_TRIANGLES)) {
                     glm::bool1 b1 = true;
-                   // if (normalBezierCounter != 1) b1 = false;
 
                     (*((Shader*)bandShader)).setUniform("isLimited", b1);
                     tupvec bezier;
@@ -155,6 +165,8 @@ void MeshDrawerGL::draw() {
                     } else {
                         bezier = beziers[normalBezierCounter++];
                     }
+
+                    
 
                     glm::vec2 p0T(X(bezier[0]), Y(bezier[0]));
                     glm::vec2 p1T(X(bezier[2]), Y(bezier[2]));
@@ -182,21 +194,101 @@ void MeshDrawerGL::draw() {
                     (*((Shader*)bandShader)).setUniform("isLimited", b2);
                 }
 
-                if (drawInfo == 999) {
+                int tricnt = std::min<int>(triangleCounter, triangles.size() - 2);
+                tupvec triangle = triangles[tricnt];
+                tupvec tri1 = triangles[tricnt];
+                tupvec tri2 = triangles[tricnt + 1];
 
+                typedef std::vector<glm::vec2> edge;
+                edge edge1({glm::vec2(X(tri1[0]), Y(tri1[0])), glm::vec2(X(tri1[1]), Y(tri1[1]))});
+                edge edge2({glm::vec2(X(tri1[0]), Y(tri1[0])), glm::vec2(X(tri1[2]), Y(tri1[2]))});
+                edge edge3({glm::vec2(X(tri1[1]), Y(tri1[1])), glm::vec2(X(tri1[2]), Y(tri1[2]))});
+
+                edge edge11({glm::vec2(X(tri2[0]), Y(tri2[0])), glm::vec2(X(tri2[1]), Y(tri2[1]))});
+                edge edge22({glm::vec2(X(tri2[0]), Y(tri2[0])), glm::vec2(X(tri2[2]), Y(tri2[2]))});
+                edge edge33({glm::vec2(X(tri2[1]), Y(tri2[1])), glm::vec2(X(tri2[2]), Y(tri2[2]))});
+
+                glm::vec2 d1(-999);
+                glm::vec2 d2(-999);
+
+                glm::vec2 d3(-999);
+                glm::vec2 d4(-999);
+
+                if (abs(edge1[0].x - edge1[1].x) > 0.0005) {
+                    d1 = edge1[0];
+                    d2 = edge1[1];
+                }
+                if ((abs(edge2[0].x - edge2[1].x) > 0.0005) &&
+                    abs(edge2[0].y - edge2[1].y) > abs(d1.y - d2.y)) {
+                    d1 = edge2[0];
+                    d2 = edge2[1];
+                }
+                if ((abs(edge3[0].x - edge3[1].x) > 0.0005) &&
+                    abs(edge3[0].y - edge3[1].y) > abs(d1.y - d2.y)) {
+                    d1 = edge3[0];
+                    d2 = edge3[1];
+                }
+
+
+                if ((abs(edge11[0].x - edge11[1].x) > 0.0005)) {
+                    d3 = edge11[0];
+                    d4 = edge11[1];
+                }
+                if (abs(edge22[0].x - edge22[1].x) > 0.0005 && abs(edge22[0].y - edge22[1].y) > abs(d3.y-d4.y))  {
+                    d3 = edge22[0];
+                    d4 = edge22[1];
+                }
+                if (abs(edge33[0].x - edge33[1].x) > 0.0005 &&
+                    abs(edge33[0].y - edge33[1].y) > abs(d3.y - d4.y)) {
+                    d3 = edge33[0];
+                    d4 = edge33[1];
+                }
+               
+
+                if ((abs(d1.x - d2.x) < 0.0005)) {
+                    d1 = d3;
+                    d2 = d4;
+                } else if ((abs(d1.x - d2.x) > 0.0005) && (abs(d3.x - d4.x) > 0.0005)) {
+                    if ((abs(d1.y - d2.y) < abs(d3.y - d4.y))) {
+                        d1 = d3;
+                        d2 = d4;
+                    }
+                }
+
+
+                if (d1.x > d2.x) {
+                    auto tmp = d1; 
+                    d1 = d2;
+                    d2 = tmp;
+                }
+
+                (*((Shader*)bandShader)).setUniform("d1", d1);
+                (*((Shader*)bandShader)).setUniform("d2", d2);
+
+                triangleCounter += 2;
+                glm::vec2 Or0(X(triangle[0]), Y(triangle[0]));
+                glm::vec2 Or1(X(triangle[1]), Y(triangle[1]));
+                glm::vec2 Or2(X(triangle[2]), Y(triangle[2]));
+                (*((Shader*)bandShader)).setUniform("Or0", Or0);
+                (*((Shader*)bandShader)).setUniform("Or1", Or1);
+                (*((Shader*)bandShader)).setUniform("Or2", Or2);
+
+                if (drawInfo == 999) {
                     utilgl::setShaderUniforms(*((Shader*)bandShader), *(getMesh()), "geometry_");
                 }
+
+               // if (normalBezierCounter != 6) continue;
+
+                glm::bool1 seconddraw = false;
+                (*((Shader*)bandShader)).setUniform("seconddraw", seconddraw);
 
                 glDrawElements(GL_PATCHES, static_cast<GLsizei>(numIndices),
                                indexBuffer->getFormatType(), nullptr);
 
-                //numInds varies, for now don't worry about GL_TRIANGLES
-                //
-                //std::fstream fs; //Some are, mainly splits, GL_TRIANGLES, rest are GL_TRIANGLE_STRIP
-               /* fs.open("test.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-                fs << " inds: " << numInds << " type: " << indexBuffer->getFormatType() << " numIndBuffs: " << numIndexBuffers << " drawmode: " << drawMode
-                   << " EXTRA: " << "\n";
-                fs.close();*/
+                seconddraw = true;
+                (*((Shader*)bandShader)).setUniform("seconddraw", seconddraw);
+                glDrawElements(GL_PATCHES, static_cast<GLsizei>(numIndices),
+                               indexBuffer->getFormatType(), nullptr);
             }
         }
     } else {

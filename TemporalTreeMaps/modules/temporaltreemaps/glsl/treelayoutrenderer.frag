@@ -16,9 +16,6 @@ uniform vec4 ambientLightColor;
 uniform float x_pixels;
 uniform float y_pixels;
 
-uniform float x_width;
-uniform float y_height;
-
 uniform bool isLimited;
 uniform vec2 p0T;
 uniform vec2 p1T;
@@ -30,8 +27,16 @@ uniform vec2 p1B;
 uniform vec2 p2B;
 uniform vec2 p3B;
 
-//uniform bool isTest;
-//uniform vec2 testVert;
+uniform vec2 d1;
+uniform vec2 d2;
+
+uniform vec2 Or0;
+uniform vec2 Or1;
+uniform vec2 Or2;
+
+uniform vec2 Or00;
+uniform vec2 Or11;
+uniform vec2 Or22;
 
 bool leftOfLine(vec2 p, vec2 A, vec2 B){
 	if(A.x > B.x){
@@ -62,6 +67,7 @@ vec2 EvaluateCubic(vec2 a, vec2 b, vec2 c, vec2 d, float t){
 
 vec2 getClosestPoint(vec2 oldPoint, vec2 PointPos, vec2 p0, vec2 p1, vec2 p2, vec2 p3)
 {
+	float divisions = 50.0;
 	vec2 closestPoint = p0;
 	float closestDist = 999999;
 	float firstDist = distance(PointPos, p0);
@@ -70,7 +76,7 @@ vec2 getClosestPoint(vec2 oldPoint, vec2 PointPos, vec2 p0, vec2 p1, vec2 p2, ve
 	}
 	float t = 0;
 	while(t <= 1){
-		t += (1.0 /50.0);
+		t += (1.0 /divisions);
 		vec2 pointOnCurve = EvaluateCubic(p0,p1,p2,p3, t);
 		float dist = distance(PointPos, pointOnCurve);
 		if(dist < closestDist && pointOnCurve != oldPoint)
@@ -172,9 +178,16 @@ in VertexData {
 	vec3 lightDir_;
 	vec3 normal_;
 	float vertex_;
+	vec2 v;
+	float leftOfDiagonal;
+	
 } VertexOut;
 
+uniform bool seconddraw;
+
 void main() {
+
+
 	vec3 coeff = vec3(0.0);
 #ifdef NORMAL_AS_COEFF
     coeff = VertexOut.normal_;
@@ -183,18 +196,14 @@ void main() {
     coeff = getCoefficients(VertexOut.normal_, VertexOut.texCoord_);
 #endif
 
-/*if(isTest == true){
-	vec2 nd = gl_FragCoord.xy;
-	//3764 2584
-}*/
+float tmpVert = VertexOut.vertex_;
 
 if(isLimited == true){
 	vec2 ndc_xy = gl_FragCoord.xy / vec2(x_pixels, y_pixels);
-	
-	/*if(ndc_xy.x < p2B.x -0.03){
-		FragData0 = vec4(1,0,0,1);
-		return;
-	}*/
+	float scaling = 1.15;
+	float yDiff = abs(d1.y-d2.y)*scaling;
+	float A = 0.04;
+	float B = 0.005;
 	
 	if(!LiveIsUnder(ndc_xy, p0T, p2T, p3T, p1T)){
 		discard;
@@ -203,11 +212,38 @@ if(isLimited == true){
 	if(LiveIsUnder(ndc_xy, p0B, p2B, p3B, p1B)){
 		discard;
 	}
+	
+	if(leftOfLine(VertexOut.v, d1, d2) && !leftOfLine(ndc_xy.xy , d1, d2)){
+		discard;
+	}
+	
+	if(!leftOfLine(VertexOut.v, d1, d2) && leftOfLine(ndc_xy.xy , d1, d2)){
+		discard;
+	}
+	
+	if(ndc_xy.x > d2.x || ndc_xy.x < d1.x){
+		discard;
+	}
+	
+	
+	
+	if(leftOfLine(VertexOut.v, d1, d2)){
+		if(!seconddraw)
+			tmpVert -= A*yDiff;
+	}
+	if(!leftOfLine(VertexOut.v, d1, d2)){
+		if(!seconddraw)
+			tmpVert += B*yDiff;
+	}
+	
+	if(ndc_xy.y > VertexOut.v.y  && ndc_xy.x > VertexOut.v.x){
+		//discard;
+	}
+	
 }
 
-vec3 actualNormal = getNormalAt(coeff, VertexOut.vertex_);
-
-vec3 N = normalize(actualNormal);
+vec3 actualNormal = getNormalAt(coeff, tmpVert);
+vec3 N = normalize(actualNormal); //change normal with time?
 vec3 L = normalize(VertexOut.lightDir_);
 
 vec3 diffuseColor = max(dot(N, L),0) * VertexOut.color_.xyz * diffuseLightColor.xyz;

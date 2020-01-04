@@ -44,6 +44,8 @@ public:
 
     void loadBeziers(std::vector<std::vector<std::tuple<float, float>>>& beziers,
                      std::string fileNameTxt = "bezierinfo.txt");
+    std::vector<std::vector<std::tuple<float, float>>> loadAllTriangles(std::string fileNameTxt = "originalVerts.txt");
+
     void drawTextInfo(std::string);
 
     enum class DrawMode {

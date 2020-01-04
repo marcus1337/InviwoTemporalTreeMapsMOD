@@ -7,6 +7,8 @@ in VertexData {
 	vec3 lightDir_;
 	vec3 normal_;
 	float vertex_;
+	vec2 v;
+	float leftOfDiagonal;
 } VertexIn[];
  
 out VertexData {
@@ -15,9 +17,14 @@ out VertexData {
 	vec3 lightDir_;
 	vec3 normal_;
 	float vertex_;
+	vec2 v;
+	float leftOfDiagonal;
 } VertexOut;
 
 void main(void){ 
+
+	VertexOut.v = (VertexIn[0].v + VertexIn[1].v + VertexIn[2].v) / 3.0;
+	VertexOut.leftOfDiagonal = VertexIn[0].leftOfDiagonal;
 
 	VertexOut.color_ = (gl_TessCoord.x * VertexIn[0].color_ + 
                      gl_TessCoord.y * VertexIn[1].color_ +
